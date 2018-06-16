@@ -1,0 +1,66 @@
+﻿@using (Html.BeginForm("Index", "User", FormMethod.Post))
+{
+    {
+        ViewBag.Title = "DefaultView";
+    }
+    <div>
+        <table>
+            <tr>
+                <td> UserName</td>
+                <td>
+                    <input type="text" name="Username" />
+                </td>
+            </tr>
+            <tr>
+                <td> Password</td>
+                <td>
+                    <input type="text" name="Password" />
+                </td>
+            </tr>
+            <tr>
+                <td> Email</td>
+                <td>
+                    <input type="text" name="Email" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" name="btnSubmit" />
+                </td>
+            </tr>
+        </table>
+        <script>
+
+        </script>
+    </div>
+    <h2>DefaultView</h2>
+
+
+
+   @*<script>
+    $(document).ready(function () {
+    $("#submit").click(function (e) {
+        if ($("#txtUsername").val() == "")
+    alert("Username cannot be empty");
+        else if ($("#txtPassword").val() == "")
+    alert("Password cannot be empty");
+    else {
+    $.ajax({
+    type: "POST",
+    url: "/DefaultController/GetSecuredData",
+    contentType: "application/json; charset=utf-8",
+    data: '{"userName":"' + $("#txtUsername").val() + '","password":"' + $("#txtPassword").val() + '"}',
+    dataType: "html",
+    success: function (result, status, xhr) {
+    $("#dataDiv").html(result);
+    },
+    error: function (xhr, status, error) {
+    $("#dataDiv").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+    }
+    });
+    }
+    return false;
+    });
+    });
+    </script>*@  
+        }

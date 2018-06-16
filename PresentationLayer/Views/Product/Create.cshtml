@@ -1,0 +1,116 @@
+﻿@model PresentationLayer.Models.Product
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Product</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CategoryId, Model.CategoryList, new { @class = "form-control select2-allow-clear" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input id="Image" src="@Model.Image" name="img" onchange="PostFile()" type="file" value="PostFile" />
+                <input id="ImageName" type="hidden"/>
+                <img src="@Model.Image" id="img" />
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="btnsubmit" onclick="CreateValue()" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    
+    function PostFile() {
+        
+        var fileInput = document.getElementById('Image');
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("PostFile","Product")',
+                    
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (result) {
+                var name = result['ResponseData']['FilePath'];
+                //    $('#ImageName').val = name;
+                console.log(name);
+                $('#ImageName').val(name);
+            },
+            error: function (result) { console.log(result) }
+        });
+    };
+
+    
+    
+</script>
+
+<script type="text/javascript">
+    
+    
+        
+    function CreateValue() {
+        var postData = {
+            "ProductName": $("#ProductName").val(),
+            "Image": $('#ImageName').val(),
+            "CategoryId": $("#CategoryId").val(),
+            "Description": $("#Description").val()
+        };
+        console.log($("ImageName"));
+        $.ajax({
+            url: '@Url.Action("Create","Product")',
+            type:"POST",
+            data: JSON.stringify(postData),
+            contentType: "application/json",
+            dataType: 'json',
+            async:true,
+            success: function (result) { location.reload()  }
+
+        });
+
+    }
+
+</script>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
