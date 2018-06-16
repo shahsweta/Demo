@@ -21,6 +21,23 @@ namespace PresentationLayer.Controllers
         public ActionResult Create()
         {
             Product itemMasterVM = new Product();
+            if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["eid"])))
+            {
+                ProductMasterBll bl = new ProductMasterBll();
+                DataSet ds = new DataSet();
+
+                ds = bl.GetItemByID();
+               
+                itemMasterVM.ProductName = Convert.ToString(ds.Tables[0].Rows[0]["ProductName"]);
+                itemMasterVM.CategoryId = Convert.ToInt32(ds.Tables[0].Rows[0]["CategoryId"]);
+                itemMasterVM.Image = Convert.ToString(ds.Tables[0].Rows[0]["Image"]);
+                itemMasterVM.Description = Convert.ToString(ds.Tables[0].Rows[0]["Description"]);
+              
+            }
+
+
+         
+            
             itemMasterVM.CategoryList = new List<SelectListItem>();
             FillCategoryList(ref itemMasterVM);
 
@@ -31,7 +48,7 @@ namespace PresentationLayer.Controllers
         /// 
         /// </summary>
         /// <param name="itemVM"></param>
-        /// <returns></returns>
+        /// <returns></returns> 
         public void FillCategoryList(ref Product itemMasterVM)
         {
             itemMasterVM.CategoryList = new List<SelectListItem>();
@@ -82,7 +99,7 @@ namespace PresentationLayer.Controllers
                         RedirectToAction("LoadData", "ProductList");
                         return Json(new
                         {
-                            
+
                             ResponseStatus = "OK",
                             ResponseMessage = "Product Saved Successfully!",
                             //   ResponseData = new { produ = Convert.ToString(dtResponse.Rows[0]["ProductId"]) }
@@ -100,7 +117,7 @@ namespace PresentationLayer.Controllers
                 ResponseMessage = "Internal Server Error"
             });
         }
-     [HttpPost]
+        [HttpPost]
         public JsonResult PostFile(HttpPostedFileBase file)
         {
             JsonResult retunJsonObj = null;
@@ -149,7 +166,50 @@ namespace PresentationLayer.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-      
+
+        public ActionResult ProductList()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult LoadData()
+        {
+            try
+            {
+                // get allProduct
+                ProductMasterBll bll = new ProductMasterBll();
+                DataSet ds = bll.GetAllItems();
+
+                //---------           
+
+                DataTable dtGrid = new DataTable();
+                //Users objUser = new Users();
+                dtGrid = ds.Tables[0];
+                List<Product> Gridd = new List<Product>();
+                foreach (DataRow dr in dtGrid.Rows)
+                {
+                    Product Pro = new Product();
+                    Pro.ProductId = Convert.ToInt32(dr["ProductId"]);
+
+                    Pro.ProductName = dr["ProductName"].ToString();
+                    Pro.CategoryName = dr["CategoryName"].ToString();
+                    Pro.Image = dr["Image"].ToString();
+                    Pro.Description = dr["Description"].ToString();
+                    Gridd.Add(Pro);
+
+                }
+                return Json(Gridd, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
     }
 }
 
