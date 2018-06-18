@@ -53,8 +53,26 @@ namespace BusinessLogicLayer
             return new SqlGeneric().ExecuteNonQuery(cmd);
 
         }
+        public int UpdateProduct()
+        {
+            SqlCommand cmd = new SqlCommand()
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandText = "Up_Product"
+            };
 
-        public DataSet GetItemByID()
+            //auto product Id
+
+            cmd.Parameters.Add(new SqlParameter("@ProductId", ProductId));
+            cmd.Parameters.Add(new SqlParameter("@ProductName", ProductName));
+            cmd.Parameters.Add(new SqlParameter("@CategoryId", CategoryId));
+            cmd.Parameters.Add(new SqlParameter("@Description", Description));
+            cmd.Parameters.Add(new SqlParameter("@Image", Image));
+
+            return new SqlGeneric().ExecuteNonQuery(cmd);
+
+        }
+        public DataSet GetItemByID(int ProductId)
         {
             SqlCommand cmd = new SqlCommand()
             {
@@ -66,7 +84,7 @@ namespace BusinessLogicLayer
             return new SqlGeneric().ExecuteReaderDataSet(cmd);
         }
 
-        public int DeleteItem()
+        public int DeleteItem(int ProductId)
         {
             SqlCommand cmd = new SqlCommand()
             {

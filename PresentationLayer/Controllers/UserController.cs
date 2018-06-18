@@ -35,8 +35,7 @@ namespace PresentationLayer.Controllers
                     UserName = defaultModel.Username,
                     Email = defaultModel.Email,
                     Password = defaultModel.Password
-                };
-                
+                };                
                
                 DataSet ds = userBLL.VerifyUserCredential();
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)

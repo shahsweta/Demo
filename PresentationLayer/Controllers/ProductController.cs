@@ -20,24 +20,30 @@ namespace PresentationLayer.Controllers
 
         public ActionResult Create()
         {
-            Product itemMasterVM = new Product();
-            if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["eid"])))
+                Product itemMasterVM = new Product();
+            if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["eid"])) && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["id=Delete"])))
+            {
+                ProductMasterBll bl = new ProductMasterBll();
+                int dtresponse;
+               dtresponse =bl.DeleteItem((Convert.ToInt16(Request.QueryString["eid"])));
+                if(dtresponse>0)
+                {
+                    RedirectToAction("ProductList", "Product");
+                }              
+            }
+                if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["eid"])))
             {
                 ProductMasterBll bl = new ProductMasterBll();
                 DataSet ds = new DataSet();
 
-                ds = bl.GetItemByID();
-               
+                ds = bl.GetItemByID(Convert.ToInt16(Request.QueryString["eid"]));
+                itemMasterVM.ProductId = Convert.ToInt32(ds.Tables[0].Rows[0]["ProductId"]);
                 itemMasterVM.ProductName = Convert.ToString(ds.Tables[0].Rows[0]["ProductName"]);
                 itemMasterVM.CategoryId = Convert.ToInt32(ds.Tables[0].Rows[0]["CategoryId"]);
                 itemMasterVM.Image = Convert.ToString(ds.Tables[0].Rows[0]["Image"]);
                 itemMasterVM.Description = Convert.ToString(ds.Tables[0].Rows[0]["Description"]);
-              
+
             }
-
-
-         
-            
             itemMasterVM.CategoryList = new List<SelectListItem>();
             FillCategoryList(ref itemMasterVM);
 
@@ -88,22 +94,40 @@ namespace PresentationLayer.Controllers
                 if (ModelState.IsValid)
                 {
                     ProductMasterBll bll = new ProductMasterBll();
-                    //  bll.ProductId = itemMasterVM.ProductId;
+                      bll.ProductId = itemMasterVM.ProductId;
                     bll.ProductName = itemMasterVM.ProductName;
                     bll.Image = itemMasterVM.Image;
                     bll.CategoryId = itemMasterVM.CategoryId;
                     bll.Description = itemMasterVM.Description;
-                    int dtResponse = bll.SaveItem();
-                    if (dtResponse > 0)
+                    int dtResponse = 0;
+                    if (bll.ProductId>0)
                     {
-                        RedirectToAction("LoadData", "ProductList");
-                        return Json(new
+                        dtResponse = bll.UpdateProduct();
+                        if (dtResponse > 0)
                         {
+                            RedirectToAction("ProductList", "Product");
+                            return Json(new
+                            {
+                                ResponseStatus = "OK",
+                                ResponseMessage = "Product Updated Successfully!",
+                                //   ResponseData = new { produ = Convert.ToString(dtResponse.Rows[0]["ProductId"]) }
+                            });
+                        }
+                    }
+                    else
+                    {
 
-                            ResponseStatus = "OK",
-                            ResponseMessage = "Product Saved Successfully!",
-                            //   ResponseData = new { produ = Convert.ToString(dtResponse.Rows[0]["ProductId"]) }
-                        });
+                        dtResponse = bll.SaveItem();
+                        if (dtResponse > 0)
+                        {
+                            RedirectToAction("ProductList", "Product");
+                            return Json(new
+                            {
+                                ResponseStatus = "OK",
+                                ResponseMessage = "Product Saved Successfully!",
+                                //   ResponseData = new { produ = Convert.ToString(dtResponse.Rows[0]["ProductId"]) }
+                            });
+                        }
                     }
                 }
             }
@@ -209,6 +233,27 @@ namespace PresentationLayer.Controllers
                 throw;
             }
 
+        }
+
+        public JsonResult Delete(int id)
+        {
+            Product itemMasterVM = new Product();
+            if (id>0)
+            {
+                ProductMasterBll bl = new ProductMasterBll();
+                int dtresponse;
+                dtresponse = bl.DeleteItem(id);
+                if (dtresponse > 0)
+                {
+                    RedirectToAction("ProductList", "Product");
+                }
+            }           
+            return Json(new
+            {
+                ResponseStatus = "OK",
+                ResponseMessage = "Product Deleted Successfully!",
+                //   ResponseData = new { produ = Convert.ToString(dtResponse.Rows[0]["ProductId"]) }
+            });
         }
     }
 }

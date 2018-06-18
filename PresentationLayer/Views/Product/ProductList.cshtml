@@ -20,6 +20,7 @@
         </div>
     </div>
 </div>
+<input type="hidden" id="pid" />
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -33,12 +34,13 @@
             success: function (data) {
                 var items = '';
                 var rows = "<tr>" +
-                  "<th></th><th align='left' class='EmployeeTableTH'>Product ID</th><th align='left' class='EmployeeTableTH'>ProductName</th><th align='left' class='EmployeeTableTH'>Category Name</th><th align='left' class='EmployeeTableTH'>Image</th><th align='left' class='EmployeeTableTH'>Description</th>" +
+                  "<th></th><th></th><th align='left' class='EmployeeTableTH'>Product ID</th><th align='left' class='EmployeeTableTH'>ProductName</th><th align='left' class='EmployeeTableTH'>Category Name</th><th align='left' class='EmployeeTableTH'>Image</th><th align='left' class='EmployeeTableTH'>Description</th>" +
                   "</tr>";
                 $('#ProductList').append(rows);
                 $.each(data, function (i, item) {
                     var rows = "<tr>" +
                         "<td class='EmployeeTableTD'><a href='/Product/Create?eid=" + item.ProductId + "'>Edit</a></td>" +
+                          "<td class='EmployeeTableTD'><i onclick='DeleteValue(" + item.ProductId + ")'>Delete</i></td>" +
                         "<td class='EmployeeTableTD'>" + item.ProductId + "</td>" +
                         "<td class='EmployeeTableTD'>" + item.ProductName + "</td>" +
                         "<td class='EmployeeTableTD'>" + item.CategoryName + "</td>" +
@@ -58,6 +60,21 @@
     // initialize the datatables
 
 
+
+</script>
+<script type="text/javascript">
+
+    function DeleteValue(id) {
+        var Durl="/Product/Delete/"+id
+        $.ajax({            
+            url: Durl,
+            type: "GET",            
+         
+            dataType: 'json',
+            async: true,
+            success: function (result) { window.location.href = '@Url.Action("ProductList","Product")'; }
+        });
+    }
 
 </script>
 
