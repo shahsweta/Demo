@@ -20,35 +20,37 @@ namespace PresentationLayer.Controllers
 
         public ActionResult Create()
         {
-                Product itemMasterVM = new Product();
-            if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["eid"])) && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["id=Delete"])))
+            Product itemMasterVM = new Product();
+            if (HttpContext.Session["UserName"] == null || string.IsNullOrEmpty(Convert.ToString(HttpContext.Session["Email"])))
             {
-                ProductMasterBll bl = new ProductMasterBll();
-                int dtresponse;
-               dtresponse =bl.DeleteItem((Convert.ToInt16(Request.QueryString["eid"])));
-                if(dtresponse>0)
-                {
-                    RedirectToAction("ProductList", "Product");
-                }              
+                return RedirectToAction("Index", "User");
             }
+            else
+            {
                 if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["eid"])))
-            {
-                ProductMasterBll bl = new ProductMasterBll();
-                DataSet ds = new DataSet();
+                {
+                    ViewData["Message"] = "Update";
+                    ProductMasterBll bl = new ProductMasterBll();
+                    DataSet ds = new DataSet();
 
-                ds = bl.GetItemByID(Convert.ToInt16(Request.QueryString["eid"]));
-                itemMasterVM.ProductId = Convert.ToInt32(ds.Tables[0].Rows[0]["ProductId"]);
-                itemMasterVM.ProductName = Convert.ToString(ds.Tables[0].Rows[0]["ProductName"]);
-                itemMasterVM.CategoryId = Convert.ToInt32(ds.Tables[0].Rows[0]["CategoryId"]);
-                itemMasterVM.Image = Convert.ToString(ds.Tables[0].Rows[0]["Image"]);
-                itemMasterVM.Description = Convert.ToString(ds.Tables[0].Rows[0]["Description"]);
+                    ds = bl.GetItemByID(Convert.ToInt16(Request.QueryString["eid"]));
+                    itemMasterVM.ProductId = Convert.ToInt32(ds.Tables[0].Rows[0]["ProductId"]);
+                    itemMasterVM.ProductName = Convert.ToString(ds.Tables[0].Rows[0]["ProductName"]);
+                    itemMasterVM.CategoryId = Convert.ToInt32(ds.Tables[0].Rows[0]["CategoryId"]);
+                    itemMasterVM.Image = Convert.ToString(ds.Tables[0].Rows[0]["Image"]);
+                    itemMasterVM.Description = Convert.ToString(ds.Tables[0].Rows[0]["Description"]);
 
+                }
+                else
+                {
+                    ViewData["Message"] = "Create";
+                }
+
+                itemMasterVM.CategoryList = new List<SelectListItem>();
+                FillCategoryList(ref itemMasterVM);
+
+                return View(itemMasterVM);
             }
-            itemMasterVM.CategoryList = new List<SelectListItem>();
-            FillCategoryList(ref itemMasterVM);
-
-            return View(itemMasterVM);
-
         }
         /// <summary>
         /// 
@@ -94,14 +96,15 @@ namespace PresentationLayer.Controllers
                 if (ModelState.IsValid)
                 {
                     ProductMasterBll bll = new ProductMasterBll();
-                      bll.ProductId = itemMasterVM.ProductId;
+                    bll.ProductId = itemMasterVM.ProductId;
                     bll.ProductName = itemMasterVM.ProductName;
                     bll.Image = itemMasterVM.Image;
                     bll.CategoryId = itemMasterVM.CategoryId;
                     bll.Description = itemMasterVM.Description;
                     int dtResponse = 0;
-                    if (bll.ProductId>0)
+                    if (bll.ProductId > 0)
                     {
+
                         dtResponse = bll.UpdateProduct();
                         if (dtResponse > 0)
                         {
@@ -234,11 +237,11 @@ namespace PresentationLayer.Controllers
             }
 
         }
-
+        [HttpGet]
         public JsonResult Delete(int id)
         {
             Product itemMasterVM = new Product();
-            if (id>0)
+            if (id > 0)
             {
                 ProductMasterBll bl = new ProductMasterBll();
                 int dtresponse;
@@ -247,13 +250,13 @@ namespace PresentationLayer.Controllers
                 {
                     RedirectToAction("ProductList", "Product");
                 }
-            }           
+            }
             return Json(new
             {
                 ResponseStatus = "OK",
                 ResponseMessage = "Product Deleted Successfully!",
                 //   ResponseData = new { produ = Convert.ToString(dtResponse.Rows[0]["ProductId"]) }
-            });
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }

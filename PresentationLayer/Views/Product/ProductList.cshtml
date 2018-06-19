@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="pid" />
+
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -40,7 +40,7 @@
                 $.each(data, function (i, item) {
                     var rows = "<tr>" +
                         "<td class='EmployeeTableTD'><a href='/Product/Create?eid=" + item.ProductId + "'>Edit</a></td>" +
-                          "<td class='EmployeeTableTD'><i onclick='DeleteValue(" + item.ProductId + ")'>Delete</i></td>" +
+                          "<td class='EmployeeTableTD'><a href='#' onclick='DeleteValue(" + item.ProductId + ")'>Delete</a></td>" +
                         "<td class='EmployeeTableTD'>" + item.ProductId + "</td>" +
                         "<td class='EmployeeTableTD'>" + item.ProductName + "</td>" +
                         "<td class='EmployeeTableTD'>" + item.CategoryName + "</td>" +
@@ -60,19 +60,17 @@
     // initialize the datatables
 
 
-
 </script>
 <script type="text/javascript">
-
     function DeleteValue(id) {
         var Durl="/Product/Delete/"+id
         $.ajax({            
             url: Durl,
-            type: "GET",            
-         
+            type: "GET",        
             dataType: 'json',
             async: true,
-            success: function (result) { window.location.href = '@Url.Action("ProductList","Product")'; }
+            success: function (result) { location.reload(); },
+            error: function (result) {alert("wrong"); }
         });
     }
 

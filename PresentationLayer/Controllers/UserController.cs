@@ -44,7 +44,7 @@ namespace PresentationLayer.Controllers
                     HttpContext.Session["UserName"] = Convert.ToString(ds.Tables[0].Rows[0]["UserName"]);
                     HttpContext.Session["Password"] = Convert.ToString(ds.Tables[0].Rows[0]["Password"]);
                     HttpContext.Session["Email"] = Convert.ToString(ds.Tables[0].Rows[0]["Email"]);
-                    return RedirectToAction("Create", "Product");
+                    return RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {
