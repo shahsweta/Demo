@@ -1,8 +1,9 @@
 ﻿@using (Html.BeginForm("Index", "User", FormMethod.Post))
 {
     {
-        ViewBag.Title = "DefaultView";
+        ViewBag.Title = "Log In :";
     }
+    @ViewBag.UserFullName
     <div>
         <table>
             <tr>
@@ -35,7 +36,12 @@
     </div>
     <h2>DefaultView</h2>
 
-
+    <div style="color:red">
+        @if (ViewBag.ErrorMsg != null)
+                {
+            @ViewBag.ErrorMsg
+        }
+    </div>
 
    @*<script>
     $(document).ready(function () {

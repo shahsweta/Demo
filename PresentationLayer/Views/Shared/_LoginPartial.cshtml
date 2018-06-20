@@ -1,22 +1,21 @@
-﻿@using Microsoft.AspNet.Identity
-@if (Request.IsAuthenticated)
+﻿@ViewBag.UserName
+@ViewBag.Email
+@if  (ViewBag.UserName == null || string.IsNullOrEmpty(Convert.ToString(ViewBag.Email)))
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
-
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-            </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li>            
+            
+            <li>@Html.ActionLink("Log in", "Index", "Dashboard", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>      
         </ul>
     }
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Index", "Dashboard", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>@Html.ActionLink("Log Out", "LogOut", "User", routeValues: null, htmlAttributes: new { id = "LogoutLink" })</li>
+
     </ul>
 }

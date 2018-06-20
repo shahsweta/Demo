@@ -27,6 +27,9 @@ namespace PresentationLayer.Controllers
             }
             else
             {
+                ViewBag.UserName = Convert.ToString(HttpContext.Session["UserName"]);
+                ViewBag.Email = Convert.ToString(HttpContext.Session["Email"]);
+
                 if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["eid"])))
                 {
                     ViewData["Message"] = "Update";
@@ -196,6 +199,17 @@ namespace PresentationLayer.Controllers
 
         public ActionResult ProductList()
         {
+            if (HttpContext.Session["UserName"] == null || string.IsNullOrEmpty(Convert.ToString(HttpContext.Session["Email"])))
+            {
+                return RedirectToAction("Index", "User");
+            }
+            else
+            {
+                //    ViewBag.MenuList = GenerateMenus();
+                ViewBag.UserName = Convert.ToString(HttpContext.Session["UserName"]);
+                ViewBag.Email = Convert.ToString(HttpContext.Session["Email"]);
+            }
+
             return View();
         }
         /// <summary>

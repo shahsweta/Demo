@@ -23,11 +23,13 @@ namespace PresentationLayer.Controllers
             else
             {
                 //    ViewBag.MenuList = GenerateMenus();
-                ViewBag.UserFullName = Convert.ToString(HttpContext.Session["UserName"]);
+                ViewBag.UserName = Convert.ToString(HttpContext.Session["UserName"]);
+                ViewBag.Email = Convert.ToString(HttpContext.Session["Email"]);
             }
 
             return View();
             
         }
+      
     }
 }

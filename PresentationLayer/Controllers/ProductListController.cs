@@ -17,6 +17,17 @@ namespace PresentationLayer.Controllers
         // GET: ProductList
         public ActionResult Index()
         {
+            if (HttpContext.Session["UserName"] == null || string.IsNullOrEmpty(Convert.ToString(HttpContext.Session["Email"])))
+            {
+                return RedirectToAction("Index", "User");
+            }
+            else
+            {
+                //    ViewBag.MenuList = GenerateMenus();
+                ViewBag.UserName = Convert.ToString(HttpContext.Session["UserName"]);
+                ViewBag.Email = Convert.ToString(HttpContext.Session["Email"]);
+            }
+
             return View();
         }
         /// <summary>

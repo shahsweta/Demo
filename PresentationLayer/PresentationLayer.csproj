@@ -247,7 +247,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\Explorer\WelcomeView.cshtml" />
+    <Content Include="Views\Explorer\Logout.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Product\Create.cshtml" />
     <Content Include="Views\FileUpload\FileUpload.cshtml" />

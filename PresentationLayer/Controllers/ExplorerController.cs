@@ -15,7 +15,7 @@ namespace PresentationLayer.Controllers
     public class ExplorerController : Controller
     {
         // GET: Explorer
-        public ActionResult WelcomeView()
+        public ActionResult LogOut()
         {
         
            
