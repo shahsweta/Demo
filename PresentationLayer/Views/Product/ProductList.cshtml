@@ -1,5 +1,8 @@
 ﻿@model PresentationLayer.Models.Product
 
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 @{
     ViewBag.Title = "ProductList";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,23 +11,15 @@
 <h2>Product List</h2>
 
 <div class="form-horizontal">
-
     <div class="container">
-        <br />
-        <div style="width:90%; margin:0 auto;">
-            <table id="ProductList" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
-                <thead>
-
-                </thead>
-            </table>
-        </div>
+        <table id="ProductList"></table>
     </div>
 </div>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-        //      $("#tblEmployeetbodytr").remove();
+
         $.ajax
         ({
             type: 'GET',
@@ -32,23 +27,26 @@
             dataType: 'json',
             data: {},
             success: function (data) {
+
                 var items = '';
-                var rows = "<tr>" +
-                  "<th></th><th></th><th align='left' class='EmployeeTableTH'>Product ID</th><th align='left' class='EmployeeTableTH'>ProductName</th><th align='left' class='EmployeeTableTH'>Category Name</th><th align='left' class='EmployeeTableTH'>Image</th><th align='left' class='EmployeeTableTH'>Description</th>" +
-                  "</tr>";
+                var rows = "<thead><tr>" +
+                  "<th>Edit</th><th>Delete</th><th>Product ID</th><th>ProductName</th><th>Category Name</th><th>Image</th><th>Description</th>" +
+                  "</tr></thead>";
                 $('#ProductList').append(rows);
                 $.each(data, function (i, item) {
                     var rows = "<tr>" +
-                        "<td class='EmployeeTableTD'><a href='/Product/Create?eid=" + item.ProductId + "'>Edit</a></td>" +
-                          "<td class='EmployeeTableTD'><a href='#' onclick='DeleteValue(" + item.ProductId + ")'>Delete</a></td>" +
-                        "<td class='EmployeeTableTD'>" + item.ProductId + "</td>" +
-                        "<td class='EmployeeTableTD'>" + item.ProductName + "</td>" +
-                        "<td class='EmployeeTableTD'>" + item.CategoryName + "</td>" +
-                        "<td class='EmployeeTableTD'>" + item.Image + "</td>" +
-                        "<td class='EmployeeTableTD'>" + item.Description + "</td>" +
+                        "<td><a href='/Product/Create?eid=" + item.ProductId + "'>Edit</a></td>" +
+                          "<td><a href='#' onclick='DeleteValue(" + item.ProductId + ")'>Delete</a></td>" +
+                        "<td>" + item.ProductId + "</td>" +
+                        "<td>" + item.ProductName + "</td>" +
+                        "<td>" + item.CategoryName + "</td>" +
+                        "<td>" + item.Image + "</td>" +
+                        "<td>" + item.Description + "</td>" +
                         "</tr>";
-                    $('#ProductList').append(rows);
+                    $('#ProductList').append('<tbody>' + rows + '</tbody>');
                 });
+                $('#ProductList').DataTable();
+
             },
             error: function (ex) {
                 var r = jQuery.parseJSON(response.responseText);
@@ -61,44 +59,18 @@
 
 
 </script>
+
 <script type="text/javascript">
     function DeleteValue(id) {
-        var Durl="/Product/Delete/"+id
-        $.ajax({            
+        var Durl = "/Product/Delete/" + id
+        $.ajax({
             url: Durl,
-            type: "GET",        
+            type: "GET",
             dataType: 'json',
             async: true,
             success: function (result) { location.reload(); },
-            error: function (result) {alert("wrong"); }
+            error: function (result) { alert("wrong"); }
         });
     }
 
 </script>
-
-<style type="text/css">
-    .tblEmployee {
-        font-family: verdana, arial, sans - serif;
-        font-size: 11px;
-        color: #333333;
-        border-width: 1px;
-        border-color: #666666;
-        border-collapse: collapse;
-    }
-
-    .EmployeeTableTH {
-        border-width: 1px;
-        padding: 8px;
-        border-style: solid;
-        border-color: #666666;
-        background-color: #dedede;
-    }
-
-    .EmployeeTableTD {
-        border-width: 1px;
-        padding: 8px;
-        border-style: solid;
-        border-color: #666666;
-        background-color: #ffffff;
-    }
-</style>  
