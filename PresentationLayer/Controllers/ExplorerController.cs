@@ -17,8 +17,14 @@ namespace PresentationLayer.Controllers
         // GET: Explorer
         public ActionResult LogOut()
         {
-        
-           
+            if (HttpContext.Session["UserName"] == null || string.IsNullOrEmpty(Convert.ToString(HttpContext.Session["Email"])))
+            {
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
             return View();
         }
     }
