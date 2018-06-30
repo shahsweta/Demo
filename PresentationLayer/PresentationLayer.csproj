@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -193,6 +194,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -202,6 +204,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\DefaultViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -233,7 +236,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -252,6 +257,8 @@
     <Content Include="Views\Product\Create.cshtml" />
     <Content Include="Views\FileUpload\FileUpload.cshtml" />
     <Content Include="Views\Product\ProductList.cshtml" />
+    <Content Include="Views\Product\Plist.cshtml" />
+    <Content Include="Views\Employee\CreateEmp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

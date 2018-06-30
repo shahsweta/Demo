@@ -13,8 +13,9 @@ namespace PresentationLayer.Models
     public class Product
     {
         public int ProductId { get; set; }
-      
+      [Required]
         public string ProductName { get; set; }
+        [Required]
         public string CategoryName { get; set; }
         public int CategoryId { get; set; }
         public List<SelectListItem> CategoryList { get; set; }

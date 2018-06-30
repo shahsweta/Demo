@@ -42,7 +42,7 @@
             @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.RadioButton("rbGrp", "1", isChecked: true)@Html.Label("Male")
-                @Html.RadioButton("rbGrp", "2", isChecked: false)@Html.Label("Female")                
+                @Html.RadioButton("rbGrp", "2", isChecked: false)@Html.Label("Female")
                 @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -52,6 +52,27 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Details, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CountryId, Model.CountryList, new { @class = "form-control select2-allow-clear", @onchange = "FillState()" })
+                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.StateId, Model.StateList, new { @class = "form-control select2-allow-clear", @onchange = "FillCity()" })
+                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CityId, Model.CityList, new { @class = "form-control select2-allow-clear" })
+                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -71,8 +92,12 @@
             "JoiningDate": $('#JoiningDate').val(),
             "Designation": $("#Designation").val(),
             "Gender": $("#Gender").val(),
-            "Details": $("#Details").val()
-        };        
+            "Details": $("#Details").val(),
+            "CityId": $("#CityId").val(),
+            "StateId": $("#StateId").val(),
+            "CountryId": $("#CountryId").val(),
+
+        };
         $.ajax({
 
             url: '@Url.Action("CreateEmp","Employee")',
@@ -81,10 +106,37 @@
             contentType: "application/json",
             dataType: 'json',
             async:true,
-            
+
         });
     }
 
+</script>
+<script language="javascript" type="text/javascript">
+
+    function FillCity(StateId) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#CityId").html(procemessage).show();
+        
+        var url = "/Employee/GetCityByStateeId/";
+
+        $.ajax({
+            url: url,
+            data: { stateid: StateId },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                var markup = "<option value='0'>Select City</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+                }
+                $("#CityId").html(markup).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+
+    }
 </script>
 
 <div>

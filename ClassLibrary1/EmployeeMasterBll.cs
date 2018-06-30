@@ -21,7 +21,9 @@ namespace BusinessLogicLayer
         public string Designation { get; set; }
         public string Gender { get; set; }
         public string Details { get; set; }
-
+        public int CityId { get; set; }
+        public int StateId { get; set; }
+        public int CountryId { get; set; }
 
 
         #endregion
@@ -42,13 +44,39 @@ namespace BusinessLogicLayer
             cmd.Parameters.Add(new SqlParameter("@Designation", Designation));
             cmd.Parameters.Add(new SqlParameter("@Gender", Gender));
             cmd.Parameters.Add(new SqlParameter("@Details", Details));
-
+            cmd.Parameters.Add(new SqlParameter("@CityId", CityId));
+            cmd.Parameters.Add(new SqlParameter("@StateId", StateId));
+            cmd.Parameters.Add(new SqlParameter("@CountryId", CountryId));
             return new SqlGeneric().ExecuteNonQuery(cmd);
 
         }
-        public DataSet GetAllItems()
+        
+        public static DataSet GetAllDropDownData(string spName)
         {
-            return new SqlGeneric().ExecuteReaderDataSet("AllProduct");
+            return new SqlGeneric().ExecuteReaderDataSet("exec " + spName);
+        }
+        public static DataSet GetSate(int CountryId)
+        {
+            SqlCommand cmd = new SqlCommand()
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandText = "CountryId"
+            };
+
+            cmd.Parameters.Add(new SqlParameter("@CountryId", CountryId));
+            return new SqlGeneric().ExecuteReaderDataSet(cmd);
+        }
+
+        public static DataSet GetCity(int StateId)
+        {
+            SqlCommand cmd = new SqlCommand()
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandText = "StateId"
+                
+            };            
+            cmd.Parameters.Add(new SqlParameter("@StateId", StateId));
+            return new SqlGeneric().ExecuteReaderDataSet(cmd);
         }
 
         #endregion

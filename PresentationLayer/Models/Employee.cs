@@ -23,5 +23,12 @@ namespace PresentationLayer.Models
         [Required]
         public string Gender { get; set; }
         public string Details { get; set; }
+        public int CityId { get; set; }
+        public List<SelectListItem> CityList { get; set; }
+        public int StateId { get; set; }
+
+        public List<SelectListItem> StateList { get; set; }
+        public int CountryId { get; set; }
+        public List<SelectListItem> CountryList { get; set; }
     }
 }

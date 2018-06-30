@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmployeeMasterBll.cs" />
     <Compile Include="ProductMasterBll.cs" />
     <Compile Include="SqlGeneric.cs" />
     <Compile Include="UserBll.cs" />

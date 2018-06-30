@@ -17,6 +17,54 @@ namespace PresentationLayer.Controllers
         {
             return View();
         }
+        public ActionResult CreateEmp()
+        {
+            Employee EmpMaster = new Employee();
+            EmpMaster.CountryList = new List<SelectListItem>();
+            FillCountryList(ref EmpMaster);
+            return View(EmpMaster);
+        }
+        public void FillCountryList(ref Employee EmpMaster)
+        {
+            EmpMaster.CountryList = new List<SelectListItem>();
+            EmpMaster.CountryList.Add(new SelectListItem()
+            {
+                Text = Convert.ToString("Select Category"),
+                Value = Convert.ToString("-1")
+            });
+            DataSet ds = EmployeeMasterBll.GetAllDropDownData("AllCountry");
+            ds.Tables[0].TableName = "Country";
+
+
+            if (ds != null)
+            {
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow item in ds.Tables[0].Rows)
+                    {
+                        EmpMaster.CountryList.Add(new SelectListItem()
+                        {
+                            Text = Convert.ToString(item["CountryName"]),
+                            Value = Convert.ToString(item["CountryId"])
+                        });
+                    }
+                }
+
+            }
+
+        }
+        [HttpPost]
+        public ActionResult GetCityByStateeId(int Stateid)
+        {
+            Employee emp = new Employee();
+            DataSet ds = new DataSet();
+            ds=EmployeeMasterBll.GetCity(Stateid);
+            //  emp.CityList=EmployeeMasterBll.get
+            //objcity = GetAllCity().Where(m => m.StateId == stateid).ToList();
+            //SelectList obgcity = new SelectList(objcity, "Id", "CityName", 0);
+            //return Json(obgcity);
+            return Json(ds);
+        }
 
         // GET: Employee/Details/5
         public ActionResult Details(int id)
@@ -25,10 +73,7 @@ namespace PresentationLayer.Controllers
         }
 
         // GET: Employee/Create
-        public ActionResult CreateEmp()
-        {
-            return View();
-        }
+
 
         // POST: Employee/Create
         //  create Product

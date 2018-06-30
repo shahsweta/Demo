@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BusinessLogicLayer;
@@ -210,6 +209,10 @@ namespace PresentationLayer.Controllers
                 ViewBag.Email = Convert.ToString(HttpContext.Session["Email"]);
             }
 
+            return View();
+        }
+        public ActionResult Plist()
+        {
             return View();
         }
         /// <summary>
