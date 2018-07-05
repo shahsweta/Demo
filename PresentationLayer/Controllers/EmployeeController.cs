@@ -7,11 +7,14 @@ using System.Web;
 using System.Web.Mvc;
 using BusinessLogicLayer;
 using System.IO;
+using System.Web.Script.Serialization;
 
 namespace PresentationLayer.Controllers
 {
     public class EmployeeController : Controller
     {
+        public object javaScriptSerializer { get; private set; }
+
         // GET: Employee
         public ActionResult Index()
         {
@@ -29,8 +32,8 @@ namespace PresentationLayer.Controllers
             EmpMaster.CountryList = new List<SelectListItem>();
             EmpMaster.CountryList.Add(new SelectListItem()
             {
-                Text = Convert.ToString("Select Category"),
-                Value = Convert.ToString("-1")
+                Text = Convert.ToString("Select Country"),
+                Value = Convert.ToString("0")
             });
             DataSet ds = EmployeeMasterBll.GetAllDropDownData("AllCountry");
             ds.Tables[0].TableName = "Country";
@@ -54,16 +57,67 @@ namespace PresentationLayer.Controllers
 
         }
         [HttpPost]
-        public ActionResult GetCityByStateeId(int Stateid)
+        public ActionResult GetCityByStateId(int StateId)
         {
-            Employee emp = new Employee();
-            DataSet ds = new DataSet();
-            ds=EmployeeMasterBll.GetCity(Stateid);
-            //  emp.CityList=EmployeeMasterBll.get
-            //objcity = GetAllCity().Where(m => m.StateId == stateid).ToList();
-            //SelectList obgcity = new SelectList(objcity, "Id", "CityName", 0);
-            //return Json(obgcity);
-            return Json(ds);
+            try
+            {
+
+                City emp = new City();
+                DataSet ds = new DataSet();
+                ds = EmployeeMasterBll.GetCity(StateId);
+                List<City> citylist = new List<City>();
+                if (ds != null)
+                {
+                    foreach (DataRow dr in ds.Tables[0].Rows)
+                    {
+                        citylist.Add(new City
+                        {
+                            CityId = Convert.ToInt32(dr["CityId"]),
+                            CityName = Convert.ToString(dr["CityName"])
+                        });
+                    }
+                }
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string result = javaScriptSerializer.Serialize(citylist);
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        //  [Route("getstate/{CountryId
+
+        [HttpPost]
+        public ActionResult GetStateByCountryId(int CountryId)
+        {
+            try
+            {
+                State emp = new State();
+                DataSet ds = new DataSet();
+                ds = EmployeeMasterBll.GetSate(CountryId);
+                List<State> statelist = new List<State>();
+                if (ds != null)
+                {
+
+                    foreach (DataRow dr in ds.Tables[0].Rows)
+                    {
+                        statelist.Add(new State
+                        {
+                            StateId = Convert.ToInt32(dr["StateId"]),
+                            StateName = Convert.ToString(dr["StateName"])
+                        });
+                    }
+                }
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string result = javaScriptSerializer.Serialize(statelist);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         // GET: Employee/Details/5
@@ -78,14 +132,14 @@ namespace PresentationLayer.Controllers
         // POST: Employee/Create
         //  create Product
         [HttpPost]
-        public JsonResult Create(Employee itemMasterVM)
+        public ActionResult CreateEmp(Employee itemMasterVM)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var g = "none";
-                    if(itemMasterVM.Gender=="true")
+                    if (itemMasterVM.Gender == "1")
                     {
                         g = "Male";
                     }
@@ -95,19 +149,21 @@ namespace PresentationLayer.Controllers
                     }
                     EmployeeMasterBll bll = new EmployeeMasterBll();
 
-                    bll.EmployeeId = itemMasterVM.EmployeeId;
+                    //   bll.EmployeeId = itemMasterVM.EmployeeId;
                     bll.EmployeeName = itemMasterVM.EmployeeName;
-                    bll.JoiningDate = itemMasterVM.JoiningDate;
+                    DateTime date = new DateTime();
+                    date = Convert.ToDateTime(itemMasterVM.JoiningDate);
+                    bll.JoiningDate = date;
                     bll.Designation = itemMasterVM.Designation;
-                    bll.Gender = itemMasterVM.Gender;
+                    bll.Gender = g;
                     bll.Details = itemMasterVM.Details;
+                    bll.CityId = itemMasterVM.CityId;
+                    bll.StateId = itemMasterVM.StateId;
+                    bll.CountryId = itemMasterVM.CountryId;
                     int dtResponse = 0;
-
-
                     dtResponse = bll.SaveItem();
                     if (dtResponse > 0)
                     {
-                       // RedirectToAction("ProductList", "Employee");
                         return Json(new
                         {
                             ResponseStatus = "OK",
@@ -115,6 +171,14 @@ namespace PresentationLayer.Controllers
                             //   ResponseData = new { produ = Convert.ToString(dtResponse.Rows[0]["ProductId"]) }
                         });
                     }
+                }
+                else
+                {
+                    itemMasterVM.CountryList = new List<SelectListItem>();
+                    FillCountryList(ref itemMasterVM);
+
+
+                    return View(itemMasterVM);
                 }
             }
             catch (Exception ex)

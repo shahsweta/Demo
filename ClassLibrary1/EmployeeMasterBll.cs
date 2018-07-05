@@ -60,7 +60,7 @@ namespace BusinessLogicLayer
             SqlCommand cmd = new SqlCommand()
             {
                 CommandType = CommandType.StoredProcedure,
-                CommandText = "CountryId"
+                CommandText = "AllState"
             };
 
             cmd.Parameters.Add(new SqlParameter("@CountryId", CountryId));
@@ -72,7 +72,7 @@ namespace BusinessLogicLayer
             SqlCommand cmd = new SqlCommand()
             {
                 CommandType = CommandType.StoredProcedure,
-                CommandText = "StateId"
+                CommandText = "AllCity"
                 
             };            
             cmd.Parameters.Add(new SqlParameter("@StateId", StateId));

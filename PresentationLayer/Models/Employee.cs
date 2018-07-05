@@ -12,23 +12,30 @@ namespace PresentationLayer.Models
     public class Employee
     {
         public int EmployeeId { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Name Required")]
         public string EmployeeName { get; set; }
-        [Required]
+        [Required (ErrorMessage ="Date Required")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime? JoiningDate { get; set; }
-        
+        [Display(Name = "City")]
+        public int CityId { get; set; }
+        public string CityName { get; set; }
+        public List<SelectListItem> CityList { get; set; }
         public string Designation { get; set; }
-        [Required]
+        
         public string Gender { get; set; }
         public string Details { get; set; }
-        public int CityId { get; set; }
-        public List<SelectListItem> CityList { get; set; }
+        [Display(Name = "State")]
+        public string StateName { get; set; }
         public int StateId { get; set; }
-
         public List<SelectListItem> StateList { get; set; }
+        [Required]
         public int CountryId { get; set; }
+        public string CountryName { get; set; }
         public List<SelectListItem> CountryList { get; set; }
+
+
+
     }
 }

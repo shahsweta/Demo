@@ -57,21 +57,21 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.CountryId, Model.CountryList, new { @class = "form-control select2-allow-clear", @onchange = "FillState()" })
+                @Html.DropDownListFor(model => model.CountryId, Model.CountryList, new { @class = "form-control select2-allow-clear",id="Country", @onchange = "FillState()" })
                 @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.StateId, Model.StateList, new { @class = "form-control select2-allow-clear", @onchange = "FillCity()" })
+                @Html.DropDownListFor(model => model.StateId,new SelectList(Enumerable.Empty<SelectListItem>(),"StateId","StateName"),"Select State", new { @class = "form-control select2-allow-clear",id ="State", @onchange = "FillCity()" })
                 @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.CityId, Model.CityList, new { @class = "form-control select2-allow-clear" })
+                @Html.DropDownListFor(model => model.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "CityId", "CityName"), "Select State", new { @class = "form-control select2-allow-clear" ,id="City"})
                 @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -86,56 +86,104 @@
 <script type="text/javascript">
 
     function CreateValue() {
+        var date = $('#JoiningDate').val();
+        if ($("#Country").val() == null) {
+            $("#Country").val() = 0;
+        }
+
         var postData = {
             "EmployeeId": $("#EmployeeId").val(),
             "EmployeeName": $("#EmployeeName").val(),
             "JoiningDate": $('#JoiningDate').val(),
             "Designation": $("#Designation").val(),
-            "Gender": $("#Gender").val(),
+            "Gender": $('[name="rbGrp"]:checked').val(),
             "Details": $("#Details").val(),
-            "CityId": $("#CityId").val(),
-            "StateId": $("#StateId").val(),
-            "CountryId": $("#CountryId").val(),
-
+            "CityId": $("#City").val(),
+            "StateId": $("#State").val(),
+            "CountryId": $("#Country").val(),
         };
         $.ajax({
-
-            url: '@Url.Action("CreateEmp","Employee")',
-            type:"POST",
+            url: '/Employee/CreateEmp',
+            type: "POST",
             data: JSON.stringify(postData),
             contentType: "application/json",
             dataType: 'json',
-            async:true,
-
+            async: true,
+            success: function (result) { window.location.reload(); }
         });
     }
 
 </script>
 <script language="javascript" type="text/javascript">
 
-    function FillCity(StateId) {
-        var procemessage = "<option value='0'> Please wait...</option>";
-        $("#CityId").html(procemessage).show();
-        
-        var url = "/Employee/GetCityByStateeId/";
+    function FillState() {
+        var countryId = $('#Country').val();
+        var obj = { CountryId: countryId };
+        console.log(countryId);
+        console.log(obj);
+        var url = "/Employee/GetStateByCountryId";
+        console.log(url);
+        if (countryId > 0) {
+            $.ajax({
+                url: url,
+                type: "POST",
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify(obj),
+                success: function (states) {
+                    states = JSON.parse(states);
 
-        $.ajax({
-            url: url,
-            data: { stateid: StateId },
-            cache: false,
-            type: "POST",
-            success: function (data) {
-                var markup = "<option value='0'>Select City</option>";
-                for (var x = 0; x < data.length; x++) {
-                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+                    if (states.length > 0) {
+                        $("#State").html(""); // clear before appending new list
+                        var options = '';
+                        options += '<option value="Select">Select</option>';
+                        for (var i = 0; i < states.length; i++) {
+                            options += '<option value="' + states[i].StateId + '">' + states[i].StateName + '</option>';
+                        }
+                        $('#State').append(options);
+
+
+
+                    }
+                },
+            });
+        }
+        else {
+
+        }
+    }
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    function FillCity() {
+        var stateId = $('#State').val();
+        var obj = { StateId: stateId };
+        console.log(stateId);
+        console.log(obj);
+        var url = "/Employee/GetCityByStateId";
+        if (stateId > 0) {
+            $.ajax({
+                url: url,
+                type: "POST",
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify(obj),
+                success: function (cities) {
+                    cities = JSON.parse(cities);
+                    console.log(cities);
+                    if (cities.length > 0) {
+                        $("#City").html("");
+                        var options = '';
+                        options += '<option value="Select">Select</option>';
+                        for (var i = 0; i < cities.length; i++) {
+                            options += '<option value="' + cities[i].CityId + '">' + cities[i].CityName + '</option>';
+                        }
+                        $('#City').append(options);
+                    }
                 }
-                $("#CityId").html(markup).show();
-            },
-            error: function (reponse) {
-                alert("error : " + reponse);
-            }
-        });
-
+            });
+        }
     }
 </script>
 
