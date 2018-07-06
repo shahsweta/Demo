@@ -219,7 +219,7 @@ namespace PresentationLayer.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public JsonResult LoadData()
         {
             try

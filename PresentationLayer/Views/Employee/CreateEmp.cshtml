@@ -71,7 +71,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "CityId", "CityName"), "Select State", new { @class = "form-control select2-allow-clear" ,id="City"})
+                @Html.DropDownListFor(model => model.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "CityId", "CityName"), "Select City", new { @class = "form-control select2-allow-clear" ,id="City"})
                 @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
             </div>
         </div>

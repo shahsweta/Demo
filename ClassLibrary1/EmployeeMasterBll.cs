@@ -28,6 +28,11 @@ namespace BusinessLogicLayer
 
         #endregion
         #region Key Method
+
+        public DataSet GetAllEmployee()
+        {
+            return new SqlGeneric().ExecuteReaderDataSet("exec AllEmployee");
+        }
         public int SaveItem()
         {
             SqlCommand cmd = new SqlCommand()

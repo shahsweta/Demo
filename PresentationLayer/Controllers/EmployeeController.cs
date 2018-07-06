@@ -120,13 +120,6 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        // GET: Employee/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Employee/Create
 
 
         // POST: Employee/Create
@@ -190,6 +183,49 @@ namespace PresentationLayer.Controllers
                 ResponseStatus = "OK",
                 ResponseMessage = "Internal Server Error"
             });
+        }
+
+        // Employee List
+
+            public ActionResult EmployeeList()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult loadEmployee()
+        {
+            try
+            {
+
+                // get allEmployee
+                EmployeeMasterBll bll = new EmployeeMasterBll();
+                DataSet ds = bll.GetAllEmployee();
+                //---------           
+
+                DataTable dtGrid = new DataTable();                
+                dtGrid = ds.Tables[0];
+                List<Employee> Gridd = new List<Employee>();
+                foreach (DataRow dr in dtGrid.Rows)
+                {
+                    Employee emp = new Employee();
+                    emp.EmployeeId = Convert.ToInt32(dr["EmployeeId"]);
+                    emp.EmployeeName = dr["EmployeeName"].ToString();
+                    emp.JoiningDate = Convert.ToDateTime(dr["JoiningDate"]);
+                    emp.Gender = dr["Gender"].ToString();
+                    emp.CityName = dr["CityName"].ToString();
+                    emp.StateName = dr["StateName"].ToString();
+                    emp.CountryName = dr["CountryName"].ToString();
+                    Gridd.Add(emp);
+                }
+                
+                return Json(Gridd, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         // GET: Employee/Edit/5
