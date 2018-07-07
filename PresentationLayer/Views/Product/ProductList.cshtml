@@ -3,53 +3,61 @@
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-
 <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 @{
     ViewBag.Title = "ProductList";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>Product List</h2>
-
 <div class="form-horizontal">
     <div class="table-responsive">
-        <table id="ProductList" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0"></table>
+        <table id="ProductList" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                    <th>Product Id</th>
+                    <th>Product Name</th>
+                    <th>Category Name</th>
+                    <th>Image</th>
+                    <th>Description</th>
+               
+                </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
     </div>
 </div>
+
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-      
+
         $.ajax
         ({
-            type: 'GET',
+            type: 'Post',
             url: '@Url.Action("LoadData", "Product")',
-            dataType: 'json',
-            data: {},
-            success: function (data) {
-                var items = '';
-                var rows = "<thead><tr>" +
-                  "<th>Edit</th><th>Delete</th><th>Product ID</th><th>ProductName</th><th>Category Name</th><th>Image</th><th>Description</th>" +
-                  "</tr></thead>";
-                $('#ProductList').append(rows);
+            dataSrc: "",            
+                success: function (data) {
+                    console.log(data);
                 $.each(data, function (i, item) {
-                    var rows = "<tr>" +
-                        "<td><a href='/Product/Create?eid=" + item.ProductId + "'>Edit</a></td>" +
-                          "<td><a href='#' onclick='DeleteValue(" + item.ProductId + ")'>Delete</a></td>" +
-                        "<td>" + item.ProductId + "</td>" +
-                        "<td>" + item.ProductName + "</td>" +
-                        "<td>" + item.CategoryName + "</td>" +
-                        "<td>" + item.Image + "</td>" +
-                        "<td>" + item.Description + "</td>" +
+                    var rows = "<tr>";
+                        rows+="<td><a href='/Product/Create?eid=" + item.ProductId + "'>Edit</a></td>" +
+                            "<td><a href='#' onclick='DeleteValue(" + item.ProductId + ")'>Delete</a></td>" +
+                             "<td>" + item.ProductId + "</td>" +
+                             "<td>" + item.ProductName + "</td>" +
+                             "<td>" + item.CategoryName + "</td>" +
+                            "<td>" + item.Image + "</td>" +
+                            "<td>" + item.Description + "</td>" +
                         "</tr>";
-                    $('#ProductList').append('<tbody>' + rows + '</tbody>');
-                });              
-              
-                $("#ProductList").DataTable({  
-                 
-                                    
+                    $('#tbody').append(rows);
+                });
+                $("#ProductList").DataTable({
+
+
                 })
             },
             error: function (ex) {
@@ -63,7 +71,6 @@
 
 
 </script>
-
 <script type="text/javascript">
     function DeleteValue(id) {
         var Durl = "/Product/Delete/" + id

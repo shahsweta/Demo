@@ -29,36 +29,24 @@
     </table>
     <script>
         $(document).ready(function () {
-            $('#employee').DataTable({
-                "processing": true, // for show progress bar
-                "serverSide": true, // for process server side
-                "filter": true, // this is for disable filter (search box)
-                //"orderMulti": false, // for disable multiple column at once
-                "pageLength": 5,
-                 "ajax": '../ajax/data/arrays.txt'
-
-                   
-                
-                //"ajax": {
-                    //"url": "/Employee/loadEmployee",
-                    //"type": "POST",
-                    //"dataSrc": "tableData",
-                    //"datatype": "json"
-                    //"success": "function (data){data = JSON.parse(data);console.log(data);}"
-                
-                                 //"columns": [
-                    //{ "data": "EmployeeId", "name": "EmployeeId", "autoWidth": true },
-                  //  { "data": "EmployeeName", "name": "EmployeeName", "autoWidth": true },
-                    //{ "data": "JoiningDate", "name": "JoiningDate", "autoWidth": true },
-                    //{ "data": "Designation", "name": "Designation", "autoWidth": true },
-                    //{ "data": "Gender", "name": "Gender", "autoWidth": true },
-                    //{ "data": "CityName", "name": "CityName", "autoWidth": true },
-                    //{ "data": "StateName", "name": "StateName", "autoWidth": true },
-                    //{ "data": "CountryName", "name": "CountryName", "autoWidth": true },
-                    //{ "data": "Details", "name": "Details", "autoWidth": true },
-                    //]
-
-                
+            $('#employee').DataTable({                
+                "ajax": {
+                    "url": "/Employee/loadEmployee",
+                    "type": "POST",
+                    "dataSrc": ""                    
+                },
+                    "columns": [
+                    { "data": "EmployeeId", "name": "EmployeeId", "autoWidth": true },
+                    { "data": "EmployeeName", "name": "EmployeeName", "autoWidth": true },
+                    { "data": "JoiningDate", "name": "JoiningDate", "autoWidth": true },
+                    { "data": "Designation", "name": "Designation", "autoWidth": true },
+                    { "data": "Gender", "name": "Gender", "autoWidth": true },
+                    { "data": "CityName", "name": "CityName", "autoWidth": true },
+                    { "data": "StateName", "name": "StateName", "autoWidth": true },
+                    { "data": "CountryName", "name": "CountryName", "autoWidth": true },
+                    { "data": "Details", "name": "Details", "autoWidth": true }
+                    ]
+                                
             });
         });
     </script>
